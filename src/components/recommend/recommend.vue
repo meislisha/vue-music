@@ -1,65 +1,129 @@
 <template>
-    <div>
-        <div class="slider" ref="slider">
-            <div class="slider-content" ref="sliderContent">
-                <slot></slot>
-            </div>
+    <div class="recommend">
+        <div class="recommend-content">
+           <div class="slider-wrapper" v-if="recommends.length">
+             <div class="slider-content">
+               <slider >
+                   <div v-for="item in recommends">
+                       <a :href="item.linkUrl">
+                           <img :src="item.picUrl" alt="">
+                       </a>
+                   </div>
+               </slider>
+               </div>
+           </div>
+           <div class="recommend-list">
+               <h1 class="list-title">热门歌单推荐</h1>
+               <ul></ul>
+           </div>
         </div>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
-import { getRecommend } from 'api/recommend'
+import Slider from "base/slider/slider";
+import { getRecommend } from "api/recommend";
+import { ERR_OK } from "api/config";
 export default {
-    data() {
-        return {}
-    },
-    created() {
-        this._getRecommend()
-    },
-    methods: {
-        _getRecommend() {
-            // getRecommend().then(res => {
-            //     console.log(res)
-            // })
-        },
-        setSliderWidth: function(isResize) {
-            // 获取slider里的所有的子元素
-            this.children = this.$refs.sliderContent.children
-            // console.log(this.children)
-            // 计算宽度  = 图片个数+每张图片的宽度
-            let width = 0
-            // 获取手机屏幕的宽度
-            let sliderWidth = this.$refs.slider.clientWidth
-
-            for (let i = 0; i < this.children.length; i++) {
-                // 获取children里的每一项内容
-                let child = this.children[i]
-
-                child.style.width = sliderWidth + 'px'
-                width += sliderWidth
-            }
-            if (this.loop) {
-                width += 2 * sliderWidth
-            }
-            this.$refs.sliderContent.style.width = width + 'px'
-        },
-        initSlider: function() {
-            this.slider = new BScroll(this.$refs.slider, {
-                scrollX: true,
-                scrollY: false,
-                momentum: false,
-                snap: {
-                    loop: this.loop,
-                    threshold: 0.3,
-                    speed: 400
-                },
-                click: true
-            })
+  data() {
+    return {
+      recommends: []
+    };
+  },
+  created() {
+    this._getRecommend();
+    this. _getDiscList();
+  },
+  components: {
+    Slider
+  },
+  methods: {
+    _getRecommend() {
+      getRecommend().then(res => {
+        if (res.code === ERR_OK) {
+          console.log(res.data.slider);
+          this.recommends = res.data.slider;
         }
+      });
+    },
+    _getDiscList(){
+      getDiscList().then(res=>{
+        if(res.code==ERR_OK){
+
+        }
+      })
     }
-}
+  }
+};
 </script>
 
-<style scoped lasnt="stlus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
+@import '~common/stylus/variable';
+
+.recommend {
+  position: fixed;
+  width: 100%;
+  top: 88px;
+  bottom: 0;
+
+  .recommend-content {
+    height: 100%;
+    overflow: hidden;
+
+    .slider-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .recommend-list {
+      .list-title {
+        height: 65px;
+        line-height: 65px;
+        text-align: center;
+        font-size: $font-size-medium;
+        color: $color-theme;
+      }
+
+      .item {
+        display: flex;
+        box-sizing: border-box;
+        align-items: center;
+        padding: 0 20px 20px 20px;
+
+        .icon {
+          flex: 0 0 60px;
+          width: 60px;
+          padding-right: 20px;
+        }
+
+        .text {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          flex: 1;
+          line-height: 20px;
+          overflow: hidden;
+          font-size: $font-size-medium;
+
+          .name {
+            margin-bottom: 10px;
+            color: $color-text;
+          }
+
+          .desc {
+            color: $color-text-d;
+          }
+        }
+      }
+    }
+
+    .loading-container {
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}
 </style>
