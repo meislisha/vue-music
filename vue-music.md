@@ -31,6 +31,8 @@
 
 6. 组件有定时器时，要在组件beforeDestroy()里面clear  定时器，有利于内存的释放
 
+7. better-scroll单击事件与fastclick点击事件相冲突，导致图片点击无反应；只需要将需要点击的图片添加fastcick默认的class属性即可（needsclick）(表示监听该属性如果需要点击是则不拦截点击事件)
+
    ​
 
    ​				

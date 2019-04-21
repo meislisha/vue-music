@@ -1,12 +1,13 @@
 <template>
     <div class="recommend">
-        <div class="recommend-content">
+        <scroll class="recommend-content" :data="discList" ref="scroll">
+          <div>
            <div class="slider-wrapper" v-if="recommends.length">
              <div class="slider-content">
                <slider >
                    <div v-for="item in recommends">
                        <a :href="item.linkUrl">
-                           <img :src="item.picUrl" alt="">
+                           <img class="needsclick" :src="item.picUrl" alt="" @load="loadImage">
                        </a>
                    </div>
                </slider>
@@ -17,7 +18,7 @@
                <ul>
                  <li v-for="item in discList" class="item">
                   <div class="icon">
-                    <img width="60" height="60" :src="item.imgurl">
+                    <img width="60" height="60" v-lazy="item.imgurl">
                   </div>
                   <div class="text">
                     <h2 class="name" v-html="item.creator.name"></h2>
@@ -26,27 +27,36 @@
                 </li>
                </ul>
            </div>
-        </div>
+           <loading v-show="!discList.length"></loading>
+              </div>
+        </scroll>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
 import Slider from "base/slider/slider";
+import Scroll from "base/scroll/scroll";
+import Loading from "base/loading/loading";
 import { getRecommend, getDiscList } from "api/recommend";
 import { ERR_OK } from "api/config";
 export default {
   data() {
     return {
       recommends: [],
-      discList: []
+      discList: [],
+      loadChecked: false
     };
   },
   created() {
     this._getRecommend();
-    this._getDiscList();
+    // setTimeout(() => {
+      this._getDiscList();
+    // }, 2000); //测试网速慢的时候
   },
   components: {
-    Slider
+    Slider,
+    Scroll,
+    Loading
   },
   methods: {
     _getRecommend() {
@@ -60,9 +70,15 @@ export default {
     _getDiscList() {
       getDiscList().then(res => {
         if (res.code == ERR_OK) {
-          // this.discList = res.data.list;
+          this.discList = res.data.list;
         }
       });
+    },
+    loadImage() {
+      if (!this.loadChecked) {
+        this.$refs.scroll.refresh();
+        this.loadChecked = true;
+      }
     }
   }
 };
