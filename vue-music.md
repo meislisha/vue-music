@@ -1,4 +1,4 @@
-### 准备工作
+### 一、准备工作
 
 1. vue init webpack vue-music
 
@@ -27,11 +27,19 @@
    1. Babel默认只转换新的javascript句法，而不转换新的API，（错误eg:使用了 Vue 以及用 axios 来发请求，在谷歌浏览器上面，预览是没有问题的,在IE就报错，包括安卓5以下的设备，也会有这种情况）
    2. main.js中：import  "babel-polyfill"
 
+   ### 二、推荐页面
+
 5. 切换的时候可能重新去渲染组件，例如轮播图，切换到别的tab,然后回来时，轮播图又重新开始，这样就体验不好，所以往App.vue 里的router-view  外面加keep-alive
 
 6. 组件有定时器时，要在组件beforeDestroy()里面clear  定时器，有利于内存的释放
 
 7. better-scroll单击事件与fastclick点击事件相冲突，导致图片点击无反应；只需要将需要点击的图片添加fastcick默认的class属性即可（needsclick）(表示监听该属性如果需要点击是则不拦截点击事件)
+
+8. vue项目实现手机预览  config/index.js  dev下host改成本机地址（cmd：ipconfig 的IPV4地址）或0.0.0.0，然后重新运行；如果还不可以：则将电脑的防火墙关掉；
+
+   ### 三、歌手页面
+
+   ​
 
    ​
 

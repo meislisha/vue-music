@@ -75,6 +75,7 @@ export default {
       });
     },
     loadImage() {
+      //因为怕scroll计算错高度，所以等热门歌曲页面图片渲染完；在重新refresh一次计算高度
       if (!this.loadChecked) {
         this.$refs.scroll.refresh();
         this.loadChecked = true;
