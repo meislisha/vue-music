@@ -19,7 +19,10 @@ export default {
       type:Array,
       default:null
     },
-    
+    listenScroll:{
+      type:Boolean,
+      default:false
+    }
   },
   mounted() {
  setTimeout(() => {
@@ -36,6 +39,12 @@ export default {
         click:this.click,
         data:this.data
       })
+      if(this.listenScroll){
+        let me=this
+        this.scroll.on('scroll',(pos)=>{
+          me.$emit('scroll',pos)
+        })
+      }
    },
    _enable(){
      this.scroll&&this.scroll.enable();
