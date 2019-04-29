@@ -49,6 +49,12 @@
 
    ### 三、 歌手页面
 
+   ### 四、VUEX
+
+   1. import *  as actions from "./actions"    就可以直接actions点语法取得对象属性值  actions.
+
+      ​
+
    ​
 
    ​
